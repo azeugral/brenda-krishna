@@ -5,7 +5,7 @@ Site da tatuadora Brenda Krishna (Sorocaba-SP, @ink.krishna_). Estático, sem de
 ## Como editar
 
 - Texto e estrutura: `tools/modelo.html`. Depois rode `python tools/montar.py`; o `index.html` é gerado, não edite direto.
-- Listas de trabalhos, disponíveis e rolo: `tools/processar.py` (`OBRAS`, `DISP`, `ROLO`). Precisa da pasta `_ref`, que fica fora do repositório.
+- Listas de trabalhos e disponíveis: `tools/processar.py` (`OBRAS`, `DISP`). Precisa da pasta `_ref`, que fica fora do repositório.
 - Hero: `assets/js/arte.js`. Depois de mudar, rode `python tools/gerar_video.py` para refazer os MP4 e pôsteres.
 
 ## Identidade extraída

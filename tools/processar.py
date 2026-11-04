@@ -23,7 +23,6 @@ DISP = [
     ('038_0', .5, 'Estrela e fumaça', 'Arte autoral'), ('021_0', .5, 'Fada e cristal', 'Arte autoral'), ('023_0', .55, 'Casa no cogumelo', 'Em cor'),
     ('030_0', .5, 'Sol e bússola', 'Arte autoral'), ('042_0', .5, 'Cat potion', 'Mínimo de 13 cm'), ('011_0', .5, 'Gato e coração', 'Em cor'),
 ]
-ROLO = [('027_0', .5, 'Julho'), ('027_14', .5, ''), ('008_15', .5, ''), ('032_0', .5, 'Junho'), ('032_2', .5, ''), ('027_4', .5, ''), ('008_0', .5, 'Setembro'), ('027_6', .5, ''), ('018_16', .5, ''), ('018_0', .5, 'Agosto'), ('008_1', .5, ''), ('032_16', .5, '')]
 
 
 def corte(im, ar, fy=.5):
@@ -65,8 +64,6 @@ def main():
         salva(im.resize((540, 675), Image.LANCZOS), f'obras/{n}-p.webp', 78)
     for i, (p, fy, _t, _n) in enumerate(DISP):
         salva(corte(foto(p), 3 / 4, fy).resize((720, 960), Image.LANCZOS), f'disp/{i + 1:02d}.webp', 80)
-    for i, (p, fy, _m) in enumerate(ROLO):
-        salva(corte(foto(p), 4 / 5, fy).resize((640, 800), Image.LANCZOS), f'rolo/{i + 1:02d}.webp', 78)
     salva(corte(foto('061_0'), 4 / 5).resize((1440, 1800), Image.LANCZOS), 'retrato.webp', 84)
     salva(corte(foto('061_0'), 4 / 5).resize((720, 900), Image.LANCZOS), 'retrato-p.webp', 80)
     for nome, p in (('proc-1', '018_9'), ('proc-2', '014_2'), ('proc-3', '032_13'), ('proc-4', '004_1'), ('marcacao', '014_2'), ('pronta', '014_0')):

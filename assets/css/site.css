@@ -32,8 +32,8 @@ button { cursor: pointer; background: none; border: 0; padding: 0; }
 .cab .cursiva { margin-top: -.34em; padding-left: 26%; }
 .cab-esq { text-align: left; margin-left: 0; }
 .cab-esq .cursiva { padding-left: 34%; }
-.cab-luz .tit, .noite .tit { color: var(--lilas); text-shadow: .035em .035em 0 #120a06; }
-.cab-luz .cursiva, .noite .cursiva { color: #fff; text-shadow: .05em .05em 0 #120a06; }
+.noite .tit { color: var(--lilas); text-shadow: .035em .035em 0 #120a06; }
+.noite .cursiva { color: #fff; text-shadow: .05em .05em 0 #120a06; }
 .intro { max-width: 58ch; margin: 0 auto clamp(24px, 3.4vw, 40px); text-align: center; color: var(--sepia); }
 
 .btn { display: inline-flex; align-items: center; justify-content: center; position: relative; min-height: 50px; padding: 12px 26px; background: var(--tinta); color: var(--manteiga); font: 500 1rem/1.2 var(--corpo); letter-spacing: .01em; text-decoration: none; border: 1px solid var(--tinta); white-space: nowrap; transition: background .32s var(--ease), color .32s var(--ease), transform .32s var(--ease), box-shadow .32s var(--ease); box-shadow: inset 0 0 0 3px var(--tinta), inset 0 0 0 4px rgb(244 234 166 / .4); }
@@ -85,15 +85,21 @@ html.trava .topo { background: none; box-shadow: none; color: var(--lilas); }
 .obra p { margin-top: 8px; font-size: .94rem; line-height: 1.3; color: var(--sepia); }
 .mais-wrap { text-align: center; margin-top: clamp(26px, 3.4vw, 40px); }
 
-.dois { display: grid; grid-template-columns: auto auto; justify-content: center; align-items: start; gap: clamp(16px, 2.6vw, 32px); margin-bottom: clamp(36px, 5vw, 64px); }
-.compara { cursor: ew-resize; user-select: none; -webkit-user-select: none; position: relative; width: min(46vw, 560px); aspect-ratio: 4 / 5; overflow: hidden; touch-action: pan-y; box-shadow: 0 18px 40px -22px rgb(46 31 23 / .55); }
+/* as duas peças têm o mesmo quadro 4:5 e o vão central cai no vão dos 4 blocos de baixo */
+.dois, .proc { display: grid; gap: clamp(12px, 2vw, 26px); max-width: 1120px; margin: 0 auto; }
+.dois { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: clamp(26px, 3.4vw, 40px); }
+.compara, .reel { position: relative; aspect-ratio: 4 / 5; overflow: hidden; box-shadow: 0 18px 40px -22px rgb(46 31 23 / .55); }
+.compara { cursor: ew-resize; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.reel video { width: 100%; height: 100%; object-fit: cover; background: #e7d3ae; }
+.reel-btn { position: absolute; left: 0; bottom: 0; min-height: 44px; padding: 0 14px; background: rgb(46 31 23 / .86); color: var(--manteiga); font-size: .92rem; transition: background .3s var(--ease); }
+.reel-btn:hover { background: var(--ameixa); }
 .compara > img, .compara-a img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .compara-a { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--p)) 0 0); }
 .compara-linha { position: absolute; top: 0; bottom: 0; left: var(--p); width: 1px; background: var(--manteiga); box-shadow: 0 0 0 .5px rgb(46 31 23 / .4); pointer-events: none; }
 .compara-linha::after { content: ''; position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; transform: translate(-50%, -50%); background: var(--manteiga); clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%); }
 .compara input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; pointer-events: none; }
 .compara:has(input:focus-visible) { outline: 2px solid var(--ameixa); outline-offset: 3px; }
-.proc { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 2vw, 26px); max-width: 1320px; margin: 0 auto; }
+.proc { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .proc img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 .proc h3 { font: italic 500 1.28rem/1.2 var(--italica); margin-top: 12px; }
 .proc p { font-size: .96rem; color: var(--sepia); margin-top: 3px; line-height: 1.4; }
@@ -125,14 +131,6 @@ html.trava .topo { background: none; box-shadow: none; color: var(--lilas); }
 .artista-foto figcaption { margin-top: 8px; font-size: .86rem; color: #cdbba4; }
 .artista-txt p { max-width: 54ch; margin-bottom: 1em; }
 .artista-txt blockquote { font: italic 400 clamp(1.3rem, 2.3vw, 1.7rem)/1.36 var(--italica); color: var(--manteiga); margin-top: 26px; max-width: 30ch; }
-.rolo { padding: 0 0 clamp(60px, 8vw, 110px); max-width: 1500px; margin: 0 auto; }
-.rolo-faixa { display: flex; gap: clamp(14px, 2vw, 26px); overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; padding: 8px var(--mar) 18px; scrollbar-width: thin; scrollbar-color: var(--abajur) transparent; -webkit-overflow-scrolling: touch; }
-.rolo-faixa li { flex: 0 0 clamp(190px, 24vw, 280px); scroll-snap-align: center; }
-.pola { display: block; padding: 10px 10px 34px; background: #f5efe6; box-shadow: 0 16px 30px -16px rgb(0 0 0 / .8); }
-.pola img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
-.reel { width: min(25.8vw, 315px); }
-.reel-btn { display: block; min-height: 44px; margin: 6px auto 0; color: var(--sepia); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-.reel video { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: #120a06; }
 
 .cic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 2vw, 26px); max-width: 1320px; margin: 0 auto; }
 .cic img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
@@ -229,9 +227,7 @@ html.trava .topo { background: none; box-shadow: none; color: var(--lilas); }
   .filtro { padding: 6px 9px; font-size: 1rem; }
   .btn { padding: 12px 18px; }
   .linha2 { grid-template-columns: minmax(0, 1fr); }
-  .dois { grid-template-columns: minmax(0, 1fr); }
-  .compara { width: 100%; }
-  .reel { width: min(100%, 300px); margin: 0 auto; }
+  .dois { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-bottom: 16px; }
 }
 @media (max-width: 350px) { .tit { font-size: 2.6rem; } .hero-btns { gap: 8px; } .hero-btns .btn { padding: 10px 12px; font-size: .94rem; } }
 /* celulares baixos: o desenho ocupa a metade de cima, o texto encolhe para caber na de baixo */

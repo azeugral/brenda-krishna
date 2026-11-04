@@ -30,12 +30,8 @@ def disp():
     return '\n'.join(f'''    <li><img src="assets/img/disp/{i + 1:02d}.webp" alt="Desenho disponível: {a(t)}" width="720" height="960" loading="lazy" decoding="async" draggable="false"><div><h3>{a(t)}</h3><p>{a(n)}</p><button class="quero" data-t="{a(t)}">Quero esta</button></div></li>''' for i, (_p, _f, t, n) in enumerate(P.DISP))
 
 
-def rolo():
-    return '\n'.join(f'''    <li><span class="pola"><img src="assets/img/rolo/{i + 1:02d}.webp" alt="" width="640" height="800" loading="lazy" decoding="async" draggable="false"></span></li>''' for i in range(len(P.ROLO)))
-
-
 s = open(os.path.join(AQUI, 'modelo.html'), encoding='utf8').read()
-s = s.replace('__OBRAS__', obras()).replace('__DISP__', disp()).replace('__ROLO__', rolo()).replace('__V__', str(int(time.time()) % 100000))
+s = s.replace('__OBRAS__', obras()).replace('__DISP__', disp()).replace('__V__', str(int(time.time()) % 100000))
 for c in ('—', '–'):
     assert c not in s, 'traço longo no HTML'
 open(os.path.join(SITE, 'index.html'), 'w', encoding='utf8').write(s)
