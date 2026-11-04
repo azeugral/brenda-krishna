@@ -61,6 +61,18 @@ html.trava .topo { background: none; box-shadow: none; color: var(--lilas); }
 .hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; padding: 84px var(--mar) 40px; isolation: isolate; overflow: hidden; background: #d9c6a4; }
 .hero-fundo { position: absolute; inset: 0; z-index: -1; }
 .hero-fundo img, .hero-fundo canvas, .hero-fundo video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+/* deitado: arte com 94% da altura e centro em 68% da largura em qualquer proporção, igual ao posArte do site.js.
+   O quadro 16:9 acompanha a altura; em tela mais larga as sobras são o papel, com a borda do vídeo esmaecida */
+@media (min-aspect-ratio: 1/1) {
+  .hero-fundo { container-type: size; background: url(../img/hero-papel.webp) center / 100% 100%; }
+  .hero-fundo img { object-fit: fill; }
+  @supports (width: 1cqh) {
+    .hero-fundo video, .hero-fundo img.geo { inset: 0 auto auto calc(.68 * (100cqw - 177.78cqh)); width: 177.78cqh; max-width: none; height: 100cqh; object-fit: fill; }
+  }
+}
+@media (min-aspect-ratio: 16/9) {
+  .hero-fundo video, .hero-fundo img.geo { -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+}
 .hero-fundo canvas, .hero-fundo video { opacity: 0; transition: opacity .5s linear; }
 .hero-fundo canvas.on, .hero-fundo video.on { opacity: 1; }
 .hero-txt { width: min(44%, 560px); }

@@ -12,13 +12,23 @@
   var fundo = $('#heroFundo'), hero = $('#inicio');
   function deitado() { return innerWidth / innerHeight >= 1; }
   function posArte() { return deitado() ? { cx: .68, cy: .54, alt: .94 } : { cx: .5, cy: .3, alt: .46 }; }
-  function iniciaVideo() {
-    var v = document.createElement('video');
+  /* deitado: o pôster é só papel; canvas, vídeo e imagem final usam a mesma geometria (ver .hero-fundo no CSS),
+     então a arte aparece uma vez, no tamanho certo, e não muda de tamanho ao trocar de camada */
+  function iniciaVideo(desde, pronto) {
+    var v = document.createElement('video'), nome = deitado();
     v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
     v.src = 'assets/video/hero-' + (deitado() ? 'largo' : 'retrato') + '.mp4';
     v.poster = 'assets/img/hero-' + (deitado() ? 'largo' : 'retrato') + '.webp';
     fundo.appendChild(v);
-    v.addEventListener('playing', function () { v.classList.add('on'); }, { once: true });
+    if (desde) v.addEventListener('loadedmetadata', function () { v.currentTime = desde; }, { once: true });
+    v.addEventListener('playing', function () { v.classList.add('on'); if (pronto) setTimeout(pronto, 520); }, { once: true });
+    matchMedia('(min-aspect-ratio: 1/1)').addEventListener('change', function () {
+      if (deitado() === nome) return;
+      nome = deitado(); var f = nome ? 'largo' : 'retrato';
+      v.classList.remove('on'); v.poster = 'assets/img/hero-' + f + '.webp'; v.src = 'assets/video/hero-' + f + '.mp4';
+      v.addEventListener('playing', function () { v.classList.add('on'); }, { once: true });
+      var p = v.play(); if (p) p.catch(function () {});
+    });
     new IntersectionObserver(function (e) { if (e[0].isIntersecting) { var p = v.play(); if (p) p.catch(function () {}); } else v.pause(); }).observe(hero);
   }
   function iniciaCanvas() {
@@ -32,16 +42,17 @@
     function q(ms) {
       if (!visivel) return;
       if (!t0) t0 = ms;
-      if (ult && ms - ult > 34) lentos++; else if (lentos > 0) lentos -= .25;
+      /* a abertura da página sempre engasga: só mede depois de 3 s */
+      if (ms - t0 > 3000) { if (ult && ms - ult > 34) lentos++; else if (lentos > 0) lentos -= .25; }
       ult = ms;
-      if (lentos > 40) { cv.remove(); return iniciaVideo(); }
+      if (lentos > 40) { return iniciaVideo(((ms - t0) / 1000) % a.ciclo, function () { cv.remove(); }); }
       a.desenhar((ms - t0) / 1000); requestAnimationFrame(q);
     }
     a.carregou.then(function () { a.desenhar(0); cv.classList.add('on'); requestAnimationFrame(q); }, function () { cv.remove(); iniciaVideo(); });
   }
   if (!reduz) {
     if (matchMedia('(pointer: coarse)').matches || innerWidth < 900) iniciaVideo(); else iniciaCanvas();
-  } else { $('#heroPoster').src = 'assets/img/hero-' + (deitado() ? 'largo' : 'retrato') + '-fim.webp'; var sp = $('#heroFundo source'); if (sp) sp.srcset = 'assets/img/hero-retrato-fim.webp'; }
+  } else { $('#heroPoster').src = 'assets/img/hero-' + (deitado() ? 'largo' : 'retrato') + '-fim.webp'; if (deitado()) $('#heroPoster').classList.add('geo'); var sp = $('#heroFundo source'); if (sp) sp.srcset = 'assets/img/hero-retrato-fim.webp'; }
 
   /* ---------- menu ---------- */
   var menu = $('#menu'), mb = $('#menuBtn');

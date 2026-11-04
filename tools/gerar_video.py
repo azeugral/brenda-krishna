@@ -36,12 +36,17 @@ with sync_playwright() as p:
         pega = lambda js: Image.open(io.BytesIO(base64.b64decode(g.evaluate(js)))).convert('RGB')
         pega('q(0)').save(os.path.join(IMG, f'hero-{nome}.webp'), quality=84, method=6)
         pega('qf()').save(os.path.join(IMG, f'hero-{nome}-fim.webp'), quality=84, method=6)
+        if nome == 'largo':
+            # só o papel: é o que aparece antes do desenho, para o tamanho da arte nunca mudar na troca de camada
+            g.evaluate("""async()=>{const c=document.createElement('canvas');c.width=1920;c.height=1080;
+              window.p=Arte(c,{gravar:true,cor:'/assets/img/arte-cor.webp',mapa:'/assets/img/arte-mapa.webp',papel:'/assets/img/papel.webp',pos:()=>({cx:-5,cy:.54,alt:.94})});await p.carregou;window.pf=()=>{p.final();return c.toDataURL('image/jpeg',.97).split(',')[1]}}""")
+            pega('pf()').save(os.path.join(IMG, 'hero-papel.webp'), quality=84, method=6)
         if teste:
             for t in (5, 9, 16):
                 pega(f'q({t})').save(os.path.join(CONF, f'{nome}-{t}.jpg'), quality=88)
             g.close(); continue
         n = 26 * FPS
-        ff = subprocess.Popen(['ffmpeg', '-y', '-v', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-r', str(FPS), '-i', '-', '-c:v', 'libx264', '-preset', 'slow', '-crf', '23', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an', os.path.join(VID, f'hero-{nome}.mp4')], stdin=subprocess.PIPE)
+        ff = subprocess.Popen(['ffmpeg', '-y', '-v', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-r', str(FPS), '-i', '-', '-vf', 'scale=in_range=pc:out_range=tv:out_color_matrix=bt709,format=yuv420p', '-c:v', 'libx264', '-preset', 'slow', '-crf', '23', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv', '-movflags', '+faststart', '-an', os.path.join(VID, f'hero-{nome}.mp4')], stdin=subprocess.PIPE)
         for i in range(n):
             ff.stdin.write(base64.b64decode(g.evaluate(f'q({i / FPS})')))
             if i % 120 == 0:
