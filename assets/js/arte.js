@@ -1,5 +1,5 @@
 /* Hero: a filigrana da Brenda sobre o papel, à luz de abajur.
-   Ciclo de 26 s: lápis, a aquarela corre a partir da estrela central pelos caminhos do desenho, repousa e volta ao lápis.
+   Ciclo de 16 s: lápis, a aquarela corre em 5 s a partir da estrela central pelos caminhos do desenho, repousa e volta ao lápis.
    O quadro 0 é igual ao último, então o MP4 do celular não tem emenda. */
 window.Arte = function (cv, op) {
   var gl = cv.getContext('webgl', { antialias: false, alpha: false, preserveDrawingBuffer: !!op.gravar, powerPreference: 'low-power' });
@@ -31,7 +31,7 @@ window.Arte = function (cv, op) {
     '  c*=mix(vec3(1.),T,rev*cor);',
     '  c*=mix(vec3(1.),vec3(.88,.78,.93),molh*.6*cor);',
     ' }',
-    ' vec2 v=px/R;float d=length((v-vec2(.52+.012*sin(t*.7),.3))*vec2(R.x/R.y,1.)*vec2(.78,1.));',
+    ' vec2 v=px/R;float d=length((v-vec2(.52+.012*sin(t*.7854),.3))*vec2(R.x/R.y,1.)*vec2(.78,1.));',
     ' float abajur=1.-smoothstep(.2,1.25,d);',
     ' vec3 l=mix(vec3(.60,.42,.28),vec3(.985,.95,.885),abajur);',
     ' l*=1.+luz*.018;',
@@ -45,7 +45,7 @@ window.Arte = function (cv, op) {
   var lp = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(lp); gl.vertexAttribPointer(lp, 2, gl.FLOAT, false, 0, 0);
   var U = {}; ['A', 'M', 'P', 'R', 'C', 'asp', 'prog', 'cor', 'luz', 't'].forEach(function (n) { U[n] = gl.getUniformLocation(pr, n); });
   gl.uniform1i(U.A, 0); gl.uniform1i(U.M, 1); gl.uniform1i(U.P, 2);
-  var asp = 1, pronto = false, ciclo = 26;
+  var asp = 1, pronto = false, ciclo = 16;
   function tex(un, img, rep) {
     var t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + un); gl.bindTexture(gl.TEXTURE_2D, t);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
@@ -65,7 +65,7 @@ window.Arte = function (cv, op) {
     gl.viewport(0, 0, W, H); gl.uniform2f(U.R, W, H); gl.uniform3f(U.C, W * a.cx, H * a.cy, a.alt * H);
   }
   function suave(a, b, x) { var t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
-  function tremor(t) { return Math.sin(t * 2 * Math.PI / 13) * .6 + Math.sin(t * 2 * Math.PI / 2.6) * .25 + Math.sin(t * 2 * Math.PI / 1.3) * .15; }
+  function tremor(t) { return Math.sin(t * 2 * Math.PI / 16) * .6 + Math.sin(t * 2 * Math.PI / 3.2) * .25 + Math.sin(t * 2 * Math.PI / 1.6) * .15; }
   function pinta(p, c, t) {
     if (!pronto) return; pos();
     gl.uniform1f(U.prog, p); gl.uniform1f(U.cor, c); gl.uniform1f(U.luz, tremor(t)); gl.uniform1f(U.t, t);
@@ -75,8 +75,8 @@ window.Arte = function (cv, op) {
     ciclo: ciclo, carregou: carregou, medir: pos,
     desenhar: function (t) {
       t = t % ciclo;
-      var i = suave(1, 13, t), lin = Math.max(0, Math.min(1, (t - 1) / 12));
-      pinta(.5 * i + .5 * lin, 1 - suave(21.5, 25.6, t), t);
+      var i = suave(.5, 5.5, t), lin = Math.max(0, Math.min(1, (t - .5) / 5));
+      pinta(.5 * i + .5 * lin, 1 - suave(12, 15.6, t), t);
     },
     final: function () { pinta(1, 1, 0); }
   };
